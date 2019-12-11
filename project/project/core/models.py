@@ -10,7 +10,7 @@ class FullPost(models.Model): # get request for Post
 
 class Post(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
-    created_by = models.ManyToOneField(MainUser, on_delete=models.CASCADE, related_name='posts')
+    created_by = models.ForeignKey(MainUser, on_delete=models.CASCADE, related_name='posts')
     views = models.BigIntegerField(default=0)
     category = models.IntegerField(default=0)
     description = models.TextField(null=True)
@@ -25,8 +25,8 @@ class Post(models.Model):
 
 class Comment(models.Model):
     post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='post_comments')
-    reply_to = models.ForeignKey(MainUser)
-    created_by = models.ForeignKey(MainUser, on_delete=models.CASCADE)
+    reply_to = models.ForeignKey(MainUser, on_delete=models.DEFERRED, null=True)
+    created_by = models.ForeignKey(MainUser, on_delete=models.CASCADE, related_name='comments')
     created_at = models.DateTimeField(auto_now_add=True)
     class Meta:
         verbose_name = 'Comment'

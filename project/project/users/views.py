@@ -5,7 +5,7 @@ from rest_framework import viewsets, mixins
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 
-from users.serializers import UserSerializer, ProfileGetSerializer
+from users.serializers import UserSerializer, ProfileSerializer
 from users.models import MainUser, Profile
 
 
@@ -40,23 +40,27 @@ class UserViewSet(viewsets.ReadOnlyModelViewSet):
         return Response(serializer.data)
 
 
-class ProfileViewSet(mixins.RetrieveModelMixin,
-                     mixins.ListModelMixin,
-                     mixins.DestroyModelMixin,
-                     mixins.UpdateModelMixin,
-                     viewsets.GenericViewSet):
-    queryset = Profile.objects.all()
-    permission_classes = (IsAuthenticated,)
-
-    def get_serializer_class(self):
-        return ProfileGetSerializer
-
-    def get_queryset(self):
-        return self.queryset.all()
-
-    def destroy(self, request, *args, **kwargs):
-        profile = Profile.objects.get(user=request.user)
-        request.user.is_deleted = 1
-        request.user.save()
-        profile.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+# class ProfileViewSet(mixins.RetrieveModelMixin,
+#                      mixins.ListModelMixin,
+#                      mixins.DestroyModelMixin,
+#                      mixins.UpdateModelMixin,
+#                      viewsets.GenericViewSet):
+#     queryset = Profile.objects.all()
+#     permission_classes = (IsAuthenticated,)
+#     serializer_class = ProfileSerializer
+#
+#     def get_serializer_class(self):
+#         if self.action == 'get_queryset':
+#             return ProfileGetSerializer
+#         return ProfileSerializer
+#
+#     def get_queryset(self):
+#         return self.queryset.all()
+#
+#     def update(self, request, *args, **kwargs):
+#         profile = Profile.objects.get(user=request.user)
+#         profile.bio = request.data['bio']
+#         profile.avatar = request.data['avatar']
+#         profile.save()
+#         serializer = ProfileGetSerializer(profile)
+#         return Response(serializer.data)
