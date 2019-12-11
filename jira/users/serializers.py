@@ -1,4 +1,4 @@
-from jira.users.models import *
+from users.models import *
 from rest_framework import serializers
 
 class ProfileSerializer(serializers.ModelSerializer):

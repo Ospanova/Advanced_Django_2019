@@ -1,4 +1,4 @@
-AVATAR_ALLOWED_EXTS = ['.jpg', '.png']
+ALLOWED_EXTS = ['.jpg', '.png']
 TASK_TODO = 1
 TASK_IN_PROGRESS = 2
 TASK_DONE = 3

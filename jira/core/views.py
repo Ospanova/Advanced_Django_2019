@@ -2,11 +2,11 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from rest_framework import status
-from jira.core.models import *
+from core.models import *
 from rest_framework.permissions import *
 from rest_framework import viewsets
 from rest_framework.decorators import action
-from jira.core.serializers import *
+from core.serializers import *
 from rest_framework import generics
 from rest_framework import mixins
 from rest_framework.parsers import JSONParser, FormParser, MultiPartParser
@@ -164,7 +164,7 @@ class ProjectViewSet(viewsets.ModelViewSet):
 
 
 class TaskViewSet(viewsets.ModelViewSet):
-    queryset = Task.objects.all()
+    queryset = Task.tasks.all()
     permission_classes = (IsAuthenticated,)
 
     def get_serializer_class(self):
