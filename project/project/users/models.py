@@ -6,6 +6,8 @@ from utils import validators
 
 
 class MainUser(AbstractUser):
+    is_deleted = models.BooleanField(default=0)
+
     class Meta:
         verbose_name = 'User'
         verbose_name_plural = 'Users'
@@ -33,13 +35,11 @@ class MainUser(AbstractUser):
 
 
 class Profile(models.Model):
-    user = models.OneToOneField(MainUser, on_delete=models.CASCADE)
     bio = models.TextField(max_length=500)
     avatar = models.FileField(upload_to=upload.document_path, validators=[validators.validate_file_size,
-                                                                               validators.validate_extension],
+                                                                          validators.validate_extension],
                               null=True, blank=True)
-    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='profile')
-
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='profiles')
 
 def __str__(self):
         return self.user.username

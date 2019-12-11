@@ -5,7 +5,7 @@ from rest_framework import viewsets, mixins
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 
-from users.serializers import UserSerializer, ProfileSerializer, ProfileGetSerializer
+from users.serializers import UserSerializer, ProfileGetSerializer
 from users.models import MainUser, Profile
 
 
@@ -32,7 +32,7 @@ class UserViewSet(viewsets.ReadOnlyModelViewSet):
     permission_classes = (IsAuthenticated,)
 
     def get_queryset(self):
-        return MainUser.objects.all()
+        return MainUser.objects.filter(is_deleted=0)
 
     @action(methods=['GET'], detail=False)
     def me(self, request):
@@ -47,21 +47,16 @@ class ProfileViewSet(mixins.RetrieveModelMixin,
                      viewsets.GenericViewSet):
     queryset = Profile.objects.all()
     permission_classes = (IsAuthenticated,)
-    serializer_class = ProfileSerializer
 
     def get_serializer_class(self):
-        if self.action == 'get_queryset':
-            return ProfileGetSerializer
-        return ProfileSerializer
+        return ProfileGetSerializer
 
     def get_queryset(self):
         return self.queryset.all()
 
-    def update(self, request, *args, **kwargs):
+    def destroy(self, request, *args, **kwargs):
         profile = Profile.objects.get(user=request.user)
-        # profile.bio = request.data['bio']
-        # profile.avatar = request.data['avatar']
-        # profile.save()
-        serializer = ProfileGetSerializer(profile)
-        serializer.update(request.data)
-        return Response(serializer.data)
+        request.user.is_deleted = 1
+        request.user.save()
+        profile.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)

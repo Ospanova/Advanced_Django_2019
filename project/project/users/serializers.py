@@ -2,17 +2,12 @@ from rest_framework import serializers
 from users.models import MainUser, Profile
 
 
-class ProfileSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Profile
-        fields = ('__all__')
-
 class UserSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True)
 
     class Meta:
         model = MainUser
-        fields = ('id', 'username', 'email', 'first_name', 'last_name', 'password')
+        fields = ('id', 'username', 'email', 'first_name', 'last_name', 'password', 'is_deleted')
 
     def create(self, validated_data):
         user = MainUser.objects.create_user(**validated_data)
@@ -20,6 +15,9 @@ class UserSerializer(serializers.ModelSerializer):
         return user
 
 class ProfileGetSerializer(serializers.Serializer):
+    class Meta:
+        model = Profile
+        fields = ('__all__')
     bio = serializers.CharField(max_length=255)
     avatar = serializers.FileField(allow_null=True)
     user = UserSerializer()

@@ -1,6 +1,6 @@
 import os
 from django.core.exceptions import ValidationError
-
+from utils.constants import ALLOWED_EXTS
 def validate_file_size(value):
   if value.size > 1000000:
     raise ValidationError('max file size: 1Mb')
