@@ -1,8 +1,8 @@
 from django.db import models
 from users.models import MainUser
 
-# class PostManager(models.Manager): # get posts with likes and comments
-#     pass
+class PostManager(models.Manager): # get posts with likes and comments
+    pass
 #
 #
 # class FullPost(models.Model): # get request for Post
